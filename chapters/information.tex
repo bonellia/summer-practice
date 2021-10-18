@@ -5,7 +5,87 @@
 % • methods followed,  
 % • evaluation  of the project management,  
 % • key points you have learned.
+In this chapter, I will be explaining technical details regarding the 
+project. To provide better context, I shall be introducing the project first. 
+\par
+PGMaster is an admininstration tool that mainly intends to help database and 
+system administrators. PGMaster provides an interface for the systems that 
+utilize containers which are homes to databases. Using Docker containers, our 
+system creates and manages clusters. These clusters offer capabilities like 
+high availability and data integrity. With various configurations, databases 
+can be set up with modes like master, standby and more. Intended users of the 
+product is admins that manage systems with high amounts of transactions. 
+Whether it is private or official organization, many admins perform high level 
+database management operations using tools on command-line interface (CLI). 
+PGMaster can be considered as an abstraction over such interfaces as it allows 
+critical operations to be initiated, observed and completed using a graphical 
+user interface (GUI).
+\par
+PGMaster, although trivializing many tasks for admins, provides a CLI over the 
+web application as well. This is achieved using WebSockets as well as various 
+libraries which will be explained further in detail later on.
+\par
+Without any due, I will get into the phases I have been through during my 
+internship.
 \section{Analysis Phase}
+On my first day of the internship, after being given a computer and setting up 
+my development environment, I have been introduced to Derviş. Prior to my 
+involvement, he was one and only contributor of the project. It was determined 
+that I was going to implement frontend application of the system. After 
+discussing the high level requirements of the system, it was clear to be that 
+library that I was going to use for the project, namely Reactjs, was suitable. 
+The project didn't have any document prior to implementation.
+\par
+Before my involvement, Derviş had already implemented some of the backend 
+application modules which was using Java and Spring Boot framework. Being an 
+experienced software developer (with 20+ years of experience), he was quite 
+comfortable implementing Java and bash code. He also had extensive knowledge 
+on PostgreSQL and database management systems in general. However, he needed 
+a hand with the frontend application. There was only a JavaServer Pages (JSP) 
+implementation with a form and some buttons written in HTML which were not 
+sufficient for more sophisticated and dynamic nature of the system.
+\par
+We have discussed the project briefly and I proceeded to learn Reactjs the 
+following days. I will be telling about implementation related details that 
+were discussed on initial meetings on following sections. After understanding 
+the general requirements of the system I have spent time analyzing the 
+following:
+\begin{itemize}
+    \item Nature of the data to be processed.
+    \item Design related constraints.
+    \item Candidate modules and external interfaces.
+    \item Documentation needs.
+    \item Conventions to be followed during implementation.
+\end{itemize}
+
+I will try to explain considerations I have had for each of these items.
+
+
+\subsection{Data}
+\subsection{Design Constraints}
+\subsection{Modules and Interfaces}
+\subsection{Documentation}
+
+Having had an introduction to software requirements specification (SRS) and 
+software development lifecycle in general in our Software Engineering course, 
+I usually try and understand the needs of any development activity prior to 
+actual work. Aiming to follow the same trend here, I must admit that I was 
+mildly disappointed, since although we didn't have a strict timeline to 
+deliver the proof of concept (PoC) version of the application, the project 
+was solely maintained and developed by one person. This should have 
+-expectedly- obscured the need for any form of documentation.
+\par I have actively communicated with my supervisor (Koray) and colleague 
+(Derviş) on the subject and I was given permission (and responsibility) to 
+write SRS for the project. I did not start writing the document right away, 
+because it took me a while to fully grasp the overall needs and constraints 
+of the system and the rest ofthe requirements naturally needs further 
+discussion with stakeholders and the potential users. I still had chance to 
+write some of the document by myself and it will be attached to the report. 
+Final version of the SRS is expected to be completed after it is presented 
+to The Ministry of Health.
+
+\subsection{Documentation}
+
 \section{Design Phase}
 \section{Implementation Phase}
 \section{Testing Phase}
