@@ -58,10 +58,68 @@ following:
     \item Conventions to be followed during implementation.
 \end{itemize}
 
-I will try to explain considerations I have had for each of these items.
+I will try to explain considerations I have had for each of these items. 
+Before jumping into these items, it seems necessary to talk about PGMaster 
+modules and entities. The modules can be listed as follows:
 
+\begin{itemize}
+    \item \textbf{PGManager:} Even if the name suggests something similar to 
+    PGAdmin, a web-based GUI tool that is commonly used to interact with 
+    PostgreSQL databases, it is actually the backend of PGMaster application. 
+    It is written in Java (using Spring Boot framework) and it has two main 
+    purpose: Performing CRUD operations on pgm database, the database that 
+    contains ``meta'' data regarding the application itself and manage 
+    operations that affect PGMaster entities. These entities will be 
+    explained below.
+    \item \textbf{Grafana:} Grafana is a multi-platform open source analytics 
+    and interactive visualization web application. It provides charts, 
+    graphs, and alerts for the web when connected to data sources. Our 
+    web application's frontend is intended to be embedded into one of 
+    Grafana's custom panels. Within the context of PGMaster, this is its 
+    most relevant purpose. Other than that, various services and endpoints 
+    that works on the container of PGMaster provide the data Grafana shows. 
+    As understood, the application PGMaster is also containerized. The 
+    content of this container will also be mentioned later on the document.
+    \item \textbf{WeTTY:} WeTTy (Web + TTY) is an npm module that makes it 
+    possible to have terminal access in browser over HTTP(S). As mentioned 
+    before, PGManager is intended to offer necessary tools that would help 
+    advanced users to perform various actions on CLI. We have decided that 
+    using a library for this purpose would be beneficial over implementing 
+    our own module. It basically utilizes WebSocket protocol to establish 
+    an SSH connection. In PGManager, we intend to offer access to PG hosts 
+    and containers using this library.
+    \item \textbf{PG-Web:} This is the application I have implemented from 
+    the beginning using Typescript and Reactjs. It basically provides a 
+    GUI to PGManager users where they can perform various actions such as 
+    creating and initializing PGContainers, taking backups and restoring 
+    them, monitoring clusters and their nodes' status etc. PGMaster has 
+    over 100 such operations. While most of them needs only one parameter 
+    to be provided, some of them require more sophisticated data to be 
+    provided. For sake of simplicity, only some portions of these operations 
+    will be explained on the following sections of the document.
+\end{itemize}
+
+These four modules are the main ``pillar stones'' of a PGMaster ecosystem. 
+Organizations that have systems with multiple databases which needs to deal 
+with high volumes of transactions while maintaining high availability and 
+also security and integrity of their data may unfortunately not have admins 
+that are capable of performing operations that were mentioned above trivially. 
+These modules intend to offer tools that are necessary to maintain, operate 
+and administrate these systems whether they have advanced database 
+administration skills or not.
+\par
+I have mentioned that PGMaster have different entities. I will be listing 
+what they are and what purpose do they serve below:
+\begin{itemize}
+    \item \textbf{PGContainer:} 
+\end{itemize}
 
 \subsection{Data}
+The data that circulates on PGMaster could be divided into two:
+\begin{itemize}
+    \item \textbf{Entity Data:}
+    \item \textbf{Operation Results:}
+\end{itemize}
 \subsection{Design Constraints}
 \subsection{Modules and Interfaces}
 \subsection{Documentation}
