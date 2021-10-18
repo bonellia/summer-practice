@@ -8,7 +8,7 @@
 In this chapter, I will be explaining technical details regarding the 
 project. To provide better context, I shall be introducing the project first. 
 \par
-PGMaster is an admininstration tool that mainly intends to help database and 
+PGMaster is an administration tool that mainly intends to help database and 
 system administrators. PGMaster provides an interface for the systems that 
 utilize containers which are homes to databases. Using Docker containers, our 
 system creates and manages clusters. These clusters offer capabilities like 
@@ -22,7 +22,7 @@ critical operations to be initiated, observed and completed using a graphical
 user interface (GUI).
 \par
 PGMaster, although trivializing many tasks for admins, provides a CLI over the 
-web application as well. This is achieved using WebSockets as well as various 
+web application as well. This is achieved using WebSocket as well as various 
 libraries which will be explained further in detail later on.
 \par
 Without any due, I will get into the phases I have been through during my 
@@ -30,11 +30,11 @@ internship.
 \section{Analysis Phase}
 On my first day of the internship, after being given a computer and setting up 
 my development environment, I have been introduced to Derviş. Prior to my 
-involvement, he was one and only contributor of the project. It was determined 
-that I was going to implement frontend application of the system. After 
-discussing the high level requirements of the system, it was clear to be that 
-library that I was going to use for the project, namely Reactjs, was suitable. 
-The project didn't have any document prior to implementation.
+involvement, he was the one and only contributor of the project. It was 
+determined that I was going to implement frontend application of the system. 
+After discussing the high level requirements of the system, it was clear to be 
+that library that I was going to use for the project, namely Reactjs, was 
+suitable. The project didn't have any document prior to implementation.
 \par
 Before my involvement, Derviş had already implemented some of the backend 
 application modules which was using Java and Spring Boot framework. Being an 
@@ -51,14 +51,17 @@ were discussed on initial meetings on following sections. After understanding
 the general requirements of the system I have spent time analyzing the 
 following:
 \begin{itemize}
+    \item Candidate modules and entities.
     \item Nature of the data to be processed.
     \item Design related constraints.
-    \item Candidate modules and external interfaces.
     \item Documentation needs.
     \item Conventions to be followed during implementation.
 \end{itemize}
 
 I will try to explain considerations I have had for each of these items. 
+
+\subsection{Modules and Entities}
+
 Before jumping into these items, it seems necessary to talk about PGMaster 
 modules and entities. The modules can be listed as follows:
 
@@ -111,17 +114,122 @@ administration skills or not.
 I have mentioned that PGMaster have different entities. I will be listing 
 what they are and what purpose do they serve below:
 \begin{itemize}
-    \item \textbf{PGContainer:} 
+    \item \textbf{PGContainer:} As mentioned briefly before, databases 
+    within PGMaster ecosystem lives inside Docker containers. These databases 
+    have different configurations depending on their cluster modes. These 
+    modes can be simple listed as (I am not creating another list!) master, 
+    standby and replica. Intuitively, these names indicate whether a container 
+    contains the ``main'' database or its ``copies''. Depending on the status 
+    of a master database (and its container), various operations can be 
+    triggered using PG-Web. These containers come together and create a 
+    cluster, more specifically PGCluster. It is worth mentioning that PGMaster 
+    itself is a container as well. This container is intended to contain 
+    modules mentioned above. While the main benefit of using a container is 
+    to be able to deploy PGMaster on an organization easily, other benefits of 
+    using a container could also be considered as the added advantages.
+    \item \textbf{PGHost:} Naturally, a host is required to run Docker engine 
+    and PGHost is the host that houses these containers. While PGHost mainly 
+    indicate a dedicated, physical server, it can also be a virtual private 
+    server (VPS). These hosts houses PGContainer and their availability 
+    directly impacts health of a PGCluster. Naturally, a PGContainer may have 
+    nodes that lives inside different PGHosts. I think for the scope of this 
+    document, this should suffice explaining what a PGHost is.
+    \item \textbf{PGCluster:} PGCluster, to be brief, is the combination of 
+    multiple PGContainers. Its nodes (PGContainers) may or may not live inside 
+    different PGHosts. Containers alone do not provide hi(gh availability and 
+    clusters are utilized to provide it. PGClusters are shown with a topology 
+    inside PG-Web. Entity management view, which will be explained later on,
+    allows users to configure their nodes inside a PGCluster.
+    \item \textbf{PGBackupServer:} As understood from the name, it is simply 
+    a server that contains backup files of a PGContainer database. Backup 
+    data is transferred to this entity on desired intervals and when the need 
+    rises, this entity provides the data that needs to be recovered.
 \end{itemize}
+
+These four entities were the main entities that were necessary to have a 
+functional PGMaster ecosystem. I have spent first two weeks creating views 
+to create, update and delete show these entities. The main benefit of using 
+Reactjs over regular HTML/CSS/JS stack for the GUI was to be able to render 
+these entities optimally and dynamically without having to update the page. 
+While Javascipt makes a regular web page dynamic to some extend, Reactjs 
+allows users to manipulate data and have Document Object Model (DOM) to be 
+synchronized seamingly. As stated on the official documents of Reactjs, 
+Web Components and Reactjs are complementary, i.e., they solve different 
+problems. While Web Components provide encapsulation of reusable components, 
+Reactjs provides declarative implementation. So it is safe to say that real 
+benefit of using Reactjs is felt by developers, rather than users. I don't 
+mean to go out of scope of this document and explain benefits of React, so I 
+will keep it brief. In PGMaster context, React allows us to utilize having 
+declarative implementation, meaning the developer can set the ``rules'' for 
+a view and the view updates automatically with the rules provided by the 
+developer without needing to refresh the page user interacts. I have already 
+mentioned that PG-Web, the module I have implemented is embedded into Grafana. 
+It goes without saying that user should be able to observe the changes on 
+PGMaster GUI without needing to refresh the web page, especially considering 
+that Grafana already allows this for other views than PGMaster. In that sense, 
+usage of a library such as Reactjs was vital during the implementation.
 
 \subsection{Data}
 The data that circulates on PGMaster could be divided into two:
 \begin{itemize}
-    \item \textbf{Entity Data:}
-    \item \textbf{Operation Results:}
+    \item \textbf{Entity Data:} PGMaster has its own database to contain 
+    details regarding entities. While adding/updating/deleting these entities, 
+    a PostgreSQL database (pgm) is used. PGManager (the back-end) has numerous 
+    endpoints (listHosts, listContainers etc.) that feed the front-end 
+    application PG-Web. Entity data is fetched to render initial view of
+    PG-Web and it is updated performing various CRUD operations on the said 
+    database. When a user updates entities, the change is immediately 
+    reflected on PG-Web. This ensures users to have the latest updates on 
+    PGMaster to be synchronized on the GUI they are using. I have implemented 
+    the GUI in a way that a user can have sufficient feedback and information 
+    whether operations they have initiated were successful or not.
+    \item \textbf{Operation Results:} While most of the configuration a user 
+    can make is intended to be performed once or twice, the operations on a 
+    PGMaster entity is expected to be more repetitive. Depending on the status 
+    of a PGMaster entity, these operations may fail or succeed. I have 
+    implemented a view where users may see the results of the operations they 
+    have initiated. We have realized that HTTP status codes wouldn't suffice 
+    since they don't provide information regarding what went during the 
+    execution of a PGMaster operation. Then Derviş decided that we can use 
+    slightly more sophisticated response objects, namely Rx, to provide user 
+    more than just a status code. These objects contain fields like error 
+    code, command, result text, hint, execution time, container name, host 
+    name, cluster name, path, details and more. I have implemented various 
+    views that allow users to view these. I'd like to mention a detail 
+    regarding the implementation of these views. When a user triggers a 
+    command to execute, this command have potential to trigger other commands. 
+    These commands may or may not fail depending on a lot of factors (such 
+    as permissions, status of the target entity etc.) and user should be 
+    able to identify when did an operation has failed with precision. I have 
+    offered two different alternatives for users. Firstly, users may see 
+    these commands and their results with indentation on a table. As an 
+    alternative to this, users may also see a command and its ``child'' 
+    commands in a tree-like view. Upon discussions with Derviş, we have decided 
+    to use the first, as it would be practially impossible to show the results 
+    of these commands' results on a tree view, considering Grafana can only 
+    provide so much space.
+
 \end{itemize}
+
 \subsection{Design Constraints}
-\subsection{Modules and Interfaces}
+
+As mentioned before, PG-Web is intended to be shown among other views Grafana 
+has. I must admit that I have faced the challenge of ``unknown requirements''. 
+To elaborate, PGMaster is intended to be used by ``power users'' that have 
+access to hardware such as 4K monitors. However, Derviş occasionally has 
+tested the views on his personal mobile device and this forced me to consider 
+another constraint which was being responsive. Fortunately, the library I have 
+used (Semantic UI React) provided predefined solutions which allowed users to 
+interact PG-Web seamningly. Prior to my internship at Siren Bilisim, I have 
+considered web development rather trivial. However, I have learned that 
+implementing GUIs that just work on different devices is indeed a challenge 
+where you have to consider countless edge cases. I am not sure how viable the 
+end product will be on different mobile devices (tablets and movile phones 
+running Android or IOS) but I have spent decent amount of time on making our 
+Uproduct work on different devices. Unfortunately, Siren Bilişim didn't have 
+any UI/UX designer which was assigned to work on this project, so I had to 
+come up with my own designs and implementations.
+
 \subsection{Documentation}
 
 Having had an introduction to software requirements specification (SRS) and 
@@ -142,7 +250,16 @@ write some of the document by myself and it will be attached to the report.
 Final version of the SRS is expected to be completed after it is presented 
 to The Ministry of Health.
 
-\subsection{Documentation}
+\subsection{Conventions}
+
+Reactjs, the library that I have used extensively during the implementation 
+of PG-Web is a libarary that was open-sourced in 2013. Since that time, 
+with the help of community (that consists of developers from all around the 
+world) Facebook switched from class-based components (and its implemenation) 
+to function-based components. For sake of not getting into too much details, 
+I will skip how it happened, but I adopted the function-based component 
+implementation approach. With the additions of ``hooks'', Reactjs eliminated 
+the need for most of the boilerplate code and I made use of this approach.
 
 \section{Design Phase}
 \section{Implementation Phase}
