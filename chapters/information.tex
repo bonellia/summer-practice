@@ -271,7 +271,7 @@ When it comes to system design, I have adopted the design that was initially
 proposed and partially implemented by Derviş. Our application, although 
 mainly relays on operating system level operations which were invoked by 
 back-end application PGManager, is an MVC application in its essence. 
-Using RESTful API to manage network requests, I have took part in 
+Using RESTful API to manage network requests, I have taken part in 
 development of back-end code in order to comply with the standards better.
 \par
 It goes without saying that the actual layout the source code of the 
@@ -493,5 +493,100 @@ While deploying our applications, another point where I hit the wall was
 to configure Nginx. We used Nginx to utilize reverse proxy. As I have listed 
 above, we have 4 different modules, all running a different processes on 
 different ports. I chose the path of static hosting for the web application 
-which left me with three applications to set up on Nginx.
+which left me with three applications to set up on Nginx. These three apps 
+can be listed as follows:
+\begin{itemize}
+    \item PGManager
+    \item Grafana
+    \item WeTTY
+\end{itemize}
+I have spent approximately two full work days while setting up these three. 
+Although setting up SSL certificate for the domain we have used, namely 
+pgmaster.tech (with ``www'' subdomain) which I have obtained for free using 
+GitHub Student Pack, was trivial since I used Let's Encrypt's certbot, 
+configuring correct headers was quite challenging to me. I went back and 
+forth between backend application PGManager and Nginx conf. Since Nginx itself 
+was containerized, I failed initially. Then with help of Derviş, we got all 
+of them working. At that point, I stopped development on my local machine 
+partially and used remote development server of VSCode. Briefly, VSCode sets 
+up nodejs server on remote machine, allowing developer to edit source code 
+and see the changes on VPS. This, however, caused some issues such as long 
+build times and insufficient memory. So I settled with local development. 
+To ease deployment, I have created a Makefile which build front-end code 
+then copies it to remote machine using SCP. Content of the simple but very 
+useful Makefile can be seen above on Figure \ref{fig:makefile}.
+\begin{figure*}[t!]
+    \centering
+    \includegraphics[width=9cm]{makefile.png}
+    \caption{Life saver of post-deployment development.}
+    \label{fig:makefile}
+\end{figure*}
+I didn't want to populate this chapter with too many screenshots from the 
+application I have implemented. To see some captions, you may refer to 
+appendices.
 \section{Testing Phase}
+PGManager and PG-Web both have decent amount of source code written for sake 
+of catching errors before production. I have already mentioned that we have 
+had data initializers which utilize Spring framwork's repository to execute 
+CRUD operations. These tests are mostly used to clean and initialize data 
+before and during development when needed. On top of that, they make sure 
+consistency between controller and database schema. With need, we have 
+modified the classes/interfaces that belong to our PGMaster entities. In that 
+manner, we can see data initializers as migration tools as well, since they 
+indirectly update database schema as well.
+\par
+PGManager also has unit tests. These unit tests are divided into two mainly: 
+Testing service methods and testing controller methods. Controller unit tests 
+were somehow unfinished when I checked. They were most likely left to some 
+time after demo phase. I should have probably mentioned this earlier, but the 
+applications we were developing were for the demonstration the company planned 
+to make for Ministry of Health. The other parts of the unit tests for PGManager 
+services. They were testing CLI, Docker and general service methods. When a 
+user sends a PGMaster command that is executed through Docker exec command, 
+the results are somewhat unpredictable. These tests help with that. On top of 
+that, most of the operations are repetitive and these unit tests assert that 
+expected RX results are returned.
+\par
+As I have mentioned before, most of my development was for front-end app. So I 
+shall tell about the tests of PG-Web. React applications tend to allow testing 
+components on atomic level. In other words, every React component which belows 
+to a different view can be tested given that proper props are passed. However, 
+due to limited time before demo, I have not been able to implement tests for 
+every single React component I have implemented. I would still test the data 
+that is flowing and rendering behavior.
+\par
+On last week of my internship, I had a work day where my work was blocked by 
+some back-end functionality. That day, I didn't wanna quit my development 
+activities and decided to add users tests. I had prior experience testing 
+web applications using Selenium framework. To be brief, this framework 
+allows Java, Python, .NET and nodejs developers to implement test code which 
+uses web drivers to simulate user behavior on web pages. It can interact with 
+web pages using Chromium or Gecko (Mozilla Firefox) based web drivers. Using 
+Document Object Model (DOM) interaction, it can manipulate HTML elements, 
+clicking buttons, inserting keys into forms and more. I have decided to 
+implement at least some scenarios where admins would create entities and 
+see the entities being rendered given that they were successfully added to 
+the database. Some of the source code can be seen below on Figure 
+\ref{fig:selenium}
+\begin{figure*}[b!]
+    \centering
+    \includegraphics[width=11cm]{selenium.png}
+    \caption{Selenium source code to add a cluster.}
+    \label{fig:selenium}
+\end{figure*}
+When I told Koray about the user/scenario tests I was implementing, he has 
+remarked that we should focus more on the functionality of the application 
+which could be demonstrated on our demo, I have finalized my work for this 
+specific work. However, I plan to continue implementing these scenario tests 
+later on after demo, because not only they tests whether web application 
+works as expected, they also streamline data initializing, especially 
+considering the back-end code for data initialization doesn't cover all sorts 
+entity related operations such as update and delete.
+\par
+In this chapter, I have tried to explain my implementation related work 
+without getting into too much details. All in all, I can say that I have 
+had chance to apply business logic into a web application without being 
+hassled by too much CSS (with the help of Semantic UI library), further 
+improving my knowledge on front-end web development. On top of that, I gained 
+experience deploying an application and making it available online in a secure 
+environment. I have also got familiar with different protocols and standards.
