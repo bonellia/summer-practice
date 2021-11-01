@@ -32,7 +32,7 @@ On my first day of the internship, after being given a computer and setting up
 my development environment, I have been introduced to Derviş. Prior to my 
 involvement, he was the one and only contributor of the project. It was 
 determined that I was going to implement front-end application of the system. 
-After discussing the high level requirements of the system, it was clear to be 
+After discussing the high level requirements of the system, it was clear to me 
 that library that I was going to use for the project, namely Reactjs, was 
 suitable. The project didn't have any document prior to implementation.
 \par
@@ -151,9 +151,9 @@ functional PGMaster ecosystem. I have spent first two weeks creating views
 to create, update and delete show these entities. The main benefit of using 
 Reactjs over regular HTML/CSS/JS stack for the GUI was to be able to render 
 these entities optimally and dynamically without having to update the page. 
-While Javascipt makes a regular web page dynamic to some extend, Reactjs 
+While Javascript makes a regular web page dynamic to some extend, Reactjs 
 allows users to manipulate data and have Document Object Model (DOM) to be 
-synchronized seamingly. As stated on the official documents of Reactjs, 
+synchronized seamlessly. As stated on the official documents of Reactjs, 
 Web Components and Reactjs are complementary, i.e., they solve different 
 problems. While Web Components provide encapsulation of reusable components, 
 Reactjs provides declarative implementation. So it is safe to say that real 
@@ -205,7 +205,7 @@ The data that circulates on PGMaster could be divided into two:
     these commands and their results with indentation on a table. As an 
     alternative to this, users may also see a command and its ``child'' 
     commands in a tree-like view. Upon discussions with Derviş, we have decided 
-    to use the first, as it would be practially impossible to show the results 
+    to use the first, as it would be practically impossible to show the results 
     of these commands' results on a tree view, considering Grafana can only 
     provide so much space.
 
@@ -220,13 +220,13 @@ access to hardware such as 4K monitors. However, Derviş occasionally has
 tested the views on his personal mobile device and this forced me to consider 
 another constraint which was being responsive. Fortunately, the library I have 
 used (Semantic UI React) provided predefined solutions which allowed users to 
-interact PG-Web seamingly. Prior to my internship at Siren Bilisim, I have 
+interact PG-Web seamlessly. Prior to my internship at Siren Bilisim, I have 
 considered web development rather trivial. However, I have learned that 
 implementing GUIs that just work on different devices is indeed a challenge 
 where you have to consider countless edge cases. I am not sure how viable the 
-end product will be on different mobile devices (tablets and movile phones 
+end product will be on different mobile devices (tablets and mobile phones 
 running Android or IOS) but I have spent decent amount of time on making our 
-Uproduct work on different devices. Unfortunately, Siren Bilişim didn't have 
+product work on different devices. Unfortunately, Siren Bilişim didn't have 
 any UI/UX designer which was assigned to work on this project, so I had to 
 come up with my own designs and implementations.
 
@@ -244,7 +244,7 @@ was solely maintained and developed by one person. This should have
 (Derviş) on the subject and I was given permission (and responsibility) to 
 write SRS for the project. I did not start writing the document right away, 
 because it took me a while to fully grasp the overall needs and constraints 
-of the system and the rest ofthe requirements naturally needs further 
+of the system and the rest of the requirements naturally needs further 
 discussion with stakeholders and the potential users. I still had chance to 
 write some of the document by myself and it will be attached to the report. 
 Final version of the SRS is expected to be completed after it is presented 
@@ -253,9 +253,9 @@ to The Ministry of Health.
 \subsection{Conventions}
 
 Reactjs, the library that I have used extensively during the implementation 
-of PG-Web is a libarary that was open-sourced in 2013. Since that time, 
+of PG-Web is a library that was open-sourced in 2013. Since that time, 
 with the help of community (that consists of developers from all around the 
-world) Facebook switched from class-based components (and its implemenation) 
+world) Facebook switched from class-based components (and its implementation) 
 to function-based components. For sake of not getting into too much details, 
 I will skip how it happened, but I adopted the function-based component 
 implementation approach. With the additions of ``hooks'', Reactjs eliminated 
@@ -280,7 +280,7 @@ although having financial concerns and economic value, is also intended
 to be an open-source project in the long run. Having that in mind, I have 
 tried to refactor the code base once I have reached certain milestones. 
 For example, the source code for various React components would be on the 
-same file, sometimes with poor readibility. Since the company had limited 
+same file, sometimes with poor readability. Since the company had limited 
 man power when it comes to Reactjs, I have joined communities like Reactiflux 
 and communicated with different developers around the world. This community 
 actively communicates on their Discord server. The server has different 
@@ -305,7 +305,7 @@ relevant to the \textit{design} the latest version of the project
 As mentioned before, PGMaster has its own database pgm to save entity 
 related data. This database consists of four tables, pg_container, pg_host,
 pg_cluster and pg_backup. These table have their records updated with two 
-main constaint. Regular SQL-related constraints and their dependency on 
+main constraint. Regular SQL-related constraints and their dependency on 
 the success of the operations that relates to them. In other words, when a 
 user triggers a PGMaster operation from the GUI, it causes PGManager to 
 execute various projects. While some of them utilize docker engine to 
@@ -330,8 +330,8 @@ week getting familiar with the library. Reactjs is a Javascript library
 that was priorly used by Facebook internally and later open-sourced around 
 2013. Since then the library have adopted different standards with the help 
 of the community. I usually prefer sticking to official documents when I 
-am learing a new technology. I have spent trying to understand what does 
-Reactjs offers and what were the reasonings behind the changes that were 
+am learning a new technology. I have spent trying to understand what does 
+Reactjs offers and what were the reasoning behind the changes that were 
 added to it over the years. The main change that was implemented to the 
 library was the addition of hooks. To be brief, initially Reactjs used 
 class based components where you implemented a class with props and states, 
@@ -363,7 +363,7 @@ by the operating system and Docker Engine.
 \par
 I have made the mistake of refreshing the view using setInterval method of 
 Javascript on my initial iterations which was conceptually against the way 
-Reactjs is suppsoed to work. PG-Web is expected to trigger re-render without 
+Reactjs is supposed to work. PG-Web is expected to trigger re-render without 
 having to fetch the data that were updated by a user form, for example. To 
 overcome this problem, I have learned about application-wide state solutions. 
 One of the most common solutions the community offers was Redux, but I didn't 
@@ -407,7 +407,7 @@ Long story short, I have realized that I can just use prop drilling to spread
 my entity data among components that need it. With prop drilling, there is a 
 known trade-off between development time and application performance. In other 
 words, although prop drilling means passing a variable from parent components 
-to child components multiple times, it works seamingly with only necessary 
+to child components multiple times, it works seamlessly with only necessary 
 amount of re-renders. I ended using this for entity data while using the new 
 and shiny useContext hook for the darkMode which I already implemented on 
 PG-Web.
@@ -527,7 +527,7 @@ appendices.
 \section{Testing Phase}
 PGManager and PG-Web both have decent amount of source code written for sake 
 of catching errors before production. I have already mentioned that we have 
-had data initializers which utilize Spring framwork's repository to execute 
+had data initializers which utilize Spring framework's repository to execute 
 CRUD operations. These tests are mostly used to clean and initialize data 
 before and during development when needed. On top of that, they make sure 
 consistency between controller and database schema. With need, we have 
